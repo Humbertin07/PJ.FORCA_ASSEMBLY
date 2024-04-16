@@ -1,15 +1,17 @@
 # 💻 Jogo da Forca com Assembly 💻
 
+Este projeto consiste em um jogo da forca implementado em assembly. O jogo desafia os jogadores a descobrir uma palavra oculta, tentando adivinhar as letras corretas antes de exceder o número limite de tentativas e completar o desenho da forca.
+
 ## 📈 Objetivo 📈
-No jogo, o objetivo é que o jogador descubra a palavra, mantendo os traços exibidos no display.
+No jogo, o objetivo é que o jogador descubra a palavra, mantendo os traços exibidos no display. Caso o jogador apague todos os traços, ele perde.
 
 ## 📚 Itens Utilizados 📚
 
-### Tecnologias
+### Tecnologias 👾
 
 ![AssemblyScript](https://img.shields.io/badge/assembly%20script-%23000000.svg?style=for-the-badge&logo=assemblyscript&logoColor=white)
 
-### Materiais
+### Materiais 🖌️
 
 <div>
   <ul>
