@@ -1,6 +1,4 @@
-![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520)
-
-# 💻 Jogo da Forca com Assembly 💻
+![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520&text=💻%20Jogo%20da%20Forca%20com%20Assembly%20💻&section=header&reversal=false&fontSize=30&fontColor=EEE8AA&fontAlignY=65)
 
 Este projeto consiste em um jogo da forca implementado em assembly. O jogo desafia os jogadores a descobrir uma palavra oculta, tentando adivinhar as letras corretas antes de exceder o número limite de tentativas e completar o desenho da forca.
 
@@ -35,4 +33,4 @@ No jogo, o objetivo é que o jogador descubra a palavra, mantendo os traços exi
 ##### Matrícula: 24.123.065-5
 [![E-mail](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/Humbertin07)
 
-![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520&section=footer&reversal=false)
+![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520&text=👋🏻%20Até%20a%20Próxima!!%20👋🏻&section=footer&reversal=false&fontSize=30&fontColor=EEE8AA&fontAlignY=40)
