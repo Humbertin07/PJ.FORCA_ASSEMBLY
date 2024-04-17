@@ -1,3 +1,5 @@
+![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520)
+
 # 💻 Jogo da Forca com Assembly 💻
 
 Este projeto consiste em um jogo da forca implementado em assembly. O jogo desafia os jogadores a descobrir uma palavra oculta, tentando adivinhar as letras corretas antes de exceder o número limite de tentativas e completar o desenho da forca.
