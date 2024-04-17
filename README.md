@@ -34,3 +34,5 @@ No jogo, o objetivo é que o jogador descubra a palavra, mantendo os traços exi
 #### Humberto Pellegrini ⬇️
 ##### Matrícula: 24.123.065-5
 [![E-mail](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/Humbertin07)
+
+![Capsule Render](https://capsule-render.vercel.app/api?type=waving&height=130&color=DAA520&section=footer&reversal=false)
