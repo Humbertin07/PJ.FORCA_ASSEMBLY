@@ -1,159 +1,226 @@
-ORG 0H
-
-MOV P1, #0H
-
-CALL AcenderSegmentos
-
-SJMP $
-
-AcenderSegmentos:
-    MOV P1, #0x3F
-    RET
-
-END
-
-ORG 000h
-
-quantidade_palavras equ 5
-tamanho_total_palavras equ 10
-
-palavras: DB "BANANA", 0
-          DB "ABACAXI", 0
-          DB "MORANGO", 0
-          DB "UVA", 0    
-          DB "LARANJA", 0
-
-
-MAIN:
-      RET
-
-END
--------------------------------------------------------------
-;Nesse trecho em diante, temos um código funcional...
-
-; Define pinos do LCD
 RS      equ     P1.3
 EN      equ     P1.2
 
-org     000h
-ljmp    start
+org 0000h
+	LJMP START
 
-; Rotina de interrupção do UART
-org     023h
-MOV     A, SBUF      ; Recebe o caractere via UART
-MOV     30h, A       ; Armazena o caractere na posição 30h
-CLR     RI           ; Limpa a flag de recepção
-RETI
+org 023H ; PONTEIRO DA INTERRUPCAO PARA CANAL SERIAL
+	MOV A,SBUF ; REALIZA A LEITURA DO BYTE RECEBIDO
+	MOV 30h, A ; ESCREVE O VALOR NO ENDEREÇO 30H
+	CLR RI ; RESETA RI PARA RECEBER NOVO BYTE
+	SETB F0
+	RETI
 
-start:
-org     200h
-MOV     SCON, #50h   ; Modo 1: 8-bit UART
-MOV     PCON, #80h   ; SMOD = 1 para dobrar a taxa de baud
-MOV     TMOD, #20h   ; Timer 1, modo 2
-MOV     TH1, #0FDh   ; Baud rate de 9600 com SMOD = 1
-MOV     TL1, #0FDh
-MOV     IE, #90h     ; Habilita interrupção serial
-SETB    TR1          ; Inicia Timer 1
-ACALL   lcd_init     ; Inicializa LCD
+org 0040h
 
-; Armazena a palavra "HELLO" na memória interna
-MOV     20h, #'H'
-MOV     21h, #'E'
-MOV     22h, #'L'
-MOV     23h, #'L'
-MOV     24h, #'O'
-MOV     25h, #0       ; Terminador nulo
+PALAVRAS:
+DB "TESTE"
+DB 00h
 
-; Espera e processa caracteres recebidos
-wait_for_char:
-JNB     RI, wait_for_char ; Espera receber um caractere
-MOV     A, SBUF         ; Lê o caractere recebido
-MOV     30h, A          ; Armazena em 30h
-CLR     RI              ; Limpa a flag de recepção
+org 0100h
+START:
 
-; Configura o ponteiro para a palavra
-MOV     R0, #20h
+main:
+	ACALL lcd_init
+	MOV A, #05h
+	ACALL posicionaCursor
+	MOV DPTR,#PALAVRAS           
+	ACALL escreveStringROM
+	ACALL clearDisplay
+	MOV SCON, #50H ;porta serial no modo 1 e habilita a recepção
+	MOV PCON, #80h ;set o bit SMOD
+	MOV TMOD, #20H ;CT1 no modo 2
+	MOV TH1, #243 ;valor para a recarga
+	MOV TL1, #243 ;valor para a primeira contagem
+	MOV IE,#90H ; Habilita interrupção serial
+	SETB TR1 ;liga o contador/temporizador 1 
+	JNB F0, $
+	MOV A, #45h
+	ACALL posicionaCursor
+	MOV A, 30h
+	ACALL sendCharacter
+	JMP $
 
-; Procura o caractere na palavra
-compare_chars:
-MOV     A, @R0          ; Carrega um caractere da palavra
-CJNE    A, #0, check_match ; Se não é o terminador nulo, continua
-SJMP    display_no      ; Se é o terminador nulo, mostra "não"
-check_match:
-CJNE    A, 30h, next_char ; Compara com o caractere armazenado em 30h
-ACALL   display_yes     ; Se igual, mostra "sim"
-SJMP    wait_for_char   ; Volta para esperar o próximo caractere
-next_char:
-INC     R0              ; Incrementa o ponteiro da palavra
-SJMP    compare_chars   ; Continua a comparação
+escreveStringROM:
+    MOV R1, #00h  
 
-; Funções do LCD
+loop:
+    MOV A, R1
+    MOVC A, @A + DPTR
+    JZ  finish  
+    ACALL sendCharacter  
+    INC R1
+    JMP loop
+finish:
+    RET
+
 lcd_init:
-; Assume que os comandos são enviados via P1.4-P1.7
-    MOV     A, #0x03
-    ACALL   send_lcd_cmd
-    ACALL   send_lcd_cmd
-    MOV     A, #0x02
-    ACALL   send_lcd_cmd
-    MOV     A, #0x28       ; LCD 4-bit, 2 linha
-    ACALL   send_lcd_cmd
-    MOV     A, #0x0C       ; Display ON, Cursor OFF
-    ACALL   send_lcd_cmd
-    MOV     A, #0x06       ; Entry mode set
-    ACALL   send_lcd_cmd
-    MOV     A, #0x01       ; Clear display
-    ACALL   send_lcd_cmd
-    RET
 
-send_lcd_cmd:
-    CLR     RS             ; Envia comando
-    ACALL   send_nibble
-    SWAP    A
-    ACALL   send_nibble
-    ACALL   lcd_delay
-    RET
+	CLR RS		
+	
+	CLR P1.7		
+	CLR P1.6		
+	SETB P1.5		
+	CLR P1.4	
 
-send_lcd_data:
-    SETB    RS             ; Envia dados
-    ACALL   send_nibble
-    SWAP    A
-    ACALL   send_nibble
-    ACALL   lcd_delay
-    RET
+	SETB EN		
+	CLR EN		
 
-send_nibble:
-    MOV     C, ACC.7
-    MOV     P1.7, C
-    MOV     C, ACC.6
-    MOV     P1.6, C
-    MOV     C, ACC.5
-    MOV     P1.5, C
-    MOV     C, ACC.4
-    MOV     P1.4, C
-    SETB    EN
-    NOP
-    NOP
-    CLR     EN
-    RET
+	CALL delay	
+	
+	SETB EN	
+	CLR EN		
+					
 
-lcd_delay:
-    MOV     R2, #20
-wait_delay:
-    DJNZ    R2, wait_delay
-    RET
+	SETB P1.7		
 
-display_yes:
-    MOV     A, #'Y'
-    ACALL   send_lcd_data
-    MOV     A, #'e'
-    ACALL   send_lcd_data
-    MOV     A, #'s'
-    ACALL   send_lcd_data
-    RET
+	SETB EN		
+	CLR EN		
+				
+	CALL delay	
 
-display_no:
-    MOV     A, #'N'
-    ACALL   send_lcd_data
-    MOV     A, #'o'
-    ACALL   send_lcd_data
-    RET
+	CLR P1.7		
+	CLR P1.6		
+	CLR P1.5		
+	CLR P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	SETB P1.6		
+	SETB P1.5		
+
+	SETB EN		
+	CLR EN		
+
+	CALL delay		
+
+	CLR P1.7		
+	CLR P1.6		
+	CLR P1.5		
+	CLR P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	SETB P1.7		
+	SETB P1.6		
+	SETB P1.5	
+	SETB P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	CALL delay		
+	RET
+
+
+sendCharacter:
+	SETB RS  		
+	MOV C, ACC.7		
+	MOV P1.7, C			
+	MOV C, ACC.6		
+	MOV P1.6, C			
+	MOV C, ACC.5		
+	MOV P1.5, C			
+	MOV C, ACC.4		
+	MOV P1.4, C			
+	SETB EN			
+	CLR EN		
+
+	MOV C, ACC.3		
+	MOV P1.7, C			
+	MOV C, ACC.2		
+	MOV P1.6, C			
+	MOV C, ACC.1		
+	MOV P1.5, C	
+	MOV C, ACC.0		
+	MOV P1.4, C			
+
+	SETB EN			
+	CLR EN			
+
+	CALL delay		
+	CALL delay			
+	RET
+
+posicionaCursor:
+	CLR RS	
+	SETB P1.7		    
+	MOV C, ACC.6	
+	MOV P1.6, C			
+	MOV C, ACC.5		
+	MOV P1.5, C			
+	MOV C, ACC.4		
+	MOV P1.4, C			
+
+	SETB EN			
+	CLR EN			
+
+	MOV C, ACC.3		
+	MOV P1.7, C			
+	MOV C, ACC.2		
+	MOV P1.6, C			
+	MOV C, ACC.1		
+	MOV P1.5, C			
+	MOV C, ACC.0		
+	MOV P1.4, C			
+
+	SETB EN			
+	CLR EN			
+
+	CALL delay			
+	CALL delay			
+	RET
+
+retornaCursor:
+	CLR RS	
+	CLR P1.7		
+	CLR P1.6		
+	CLR P1.5		
+	CLR P1.4	
+
+	SETB EN		
+	CLR EN		
+
+	CLR P1.7		
+	CLR P1.6		
+	SETB P1.5		
+	SETB P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	CALL delay		
+	RET
+
+
+
+clearDisplay:
+	CLR RS	
+	CLR P1.7		
+	CLR P1.6		
+	CLR P1.5		
+	CLR P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	CLR P1.7		
+	CLR P1.6		
+	CLR P1.5		
+	SETB P1.4		
+
+	SETB EN		
+	CLR EN		
+
+	MOV R6, #40
+	rotC:
+	CALL delay		
+	DJNZ R6, rotC
+	RET
+
+delay:
+	MOV R0, #50
+	DJNZ R0, $
+	RET
