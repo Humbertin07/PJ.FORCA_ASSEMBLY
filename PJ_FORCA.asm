@@ -24,7 +24,11 @@ escreve:
 
 ORG 0040h
 
-PALAVRAS:
+AOBA:
+    DB "FORCA"
+    DB 00h
+
+PALAVRA:
     DB "TESTE"
     DB 00h
 
@@ -34,7 +38,7 @@ START:
     ACALL lcd_init
     MOV A, #05h
     ACALL posicionaCursor
-    MOV DPTR,#PALAVRAS           
+    MOV DPTR,#AOBA          
     ACALL escreveStringROM
     ACALL clearDisplay
     MOV SCON, #50H ;porta serial no modo 1 e habilita a recepção
@@ -49,7 +53,7 @@ START:
     ACALL posicionaCursor
     MOV A, 30h
     ACALL sendCharacter
-    JMP $
+    JMP $    
 
 escreveStringROM:
     MOV R1, #00h  
@@ -65,7 +69,7 @@ finish:
     RET
 
 comparaLetra:
-    MOV DPTR, #PALAVRAS ; aponta DPTR para o início da palavra
+    MOV DPTR, #PALAVRA ; aponta DPTR para o início da palavra
     MOV R1, #00h ; inicializa o índice
 
 loopComparacao:
@@ -95,6 +99,8 @@ letraIncorreta:
     INC posicaoLinha2 ; incrementa a posição na segunda linha
     INC R1
     JMP loopComparacao
+
+
 
 fimComparacao:
     ; aqui você pode lidar com o caso em que a letra não está na palavra
