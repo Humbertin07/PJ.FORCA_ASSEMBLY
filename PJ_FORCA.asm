@@ -1,19 +1,25 @@
 RS      EQU     P1.3
 EN      EQU     P1.2
 
+ORG 0000h ; espaço para variáveis
+posicaoLinha2: DB 00h ; posição atual na segunda linha
+
 ORG 0000h
     LJMP START
 
 ORG 023H ; PONTEIRO DA INTERRUPCAO PARA CANAL SERIAL
     MOV A,SBUF ; REALIZA A LEITURA DO BYTE RECEBIDO
+    MOV @R0, A
+    CLR RI
+    INC R0
     CJNE A, #0Dh, escreve
     RETI
 
 escreve:
     MOV 30h, A ; ESCREVE O VALOR NO ENDEREÇO 30H
-    CLR RI ; RESETA RI PARA RECEBER NOVO BYTE
+    ;CLR RI ; RESETA RI PARA RECEBER NOVO BYTE
     SETB F0
-    ACALL comparaLetra
+    ACALL comparaLetra ; Adicionado chamada para comparaLetra aqui
     RETI
 
 ORG 0040h
@@ -80,26 +86,28 @@ loopComparacao:
 letraIncorreta:
     ; a letra não está na palavra
     ; exibe a letra na segunda linha do LCD
-    MOV A, #40h ; posição na segunda linha
-    ADD A, R1 ; adiciona o índice para mover o cursor para a direita
+    MOV A, posicaoLinha2 ; pega a posição atual na segunda linha
+    ADD A, #40h ; adiciona o endereço base da segunda linha
     ACALL posicionaCursorLinha2
     MOV A, 30h
     ACALL sendCharacter
     DEC P2 ; decrementa o display 3
+    INC posicaoLinha2 ; incrementa a posição na segunda linha
     INC R1
     JMP loopComparacao
 
 fimComparacao:
+    ; aqui você pode lidar com o caso em que a letra não está na palavra
     RET
+
 
 posicionaCursorLinha2:
     CLR RS    
     SETB P1.7            
-    MOV A, #40h ; endereço para a segunda linha
+    MOV A, posicaoLinha2 ; usa a variável posicaoLinha2
+    ADD A, #40h ; adiciona o endereço base da segunda linha
     ACALL posicionaCursor
     RET
-
-; Fim das rotinas adicionadas
 
 lcd_init:
 
@@ -271,3 +279,5 @@ delay:
     MOV R0, #50
     DJNZ R0, $
     RET
+
+
