@@ -27,11 +27,12 @@ AOBA:
     DB 00h
 
 PALAVRA:
-    DB "TESTE"
+    DB "PARALELEPIPEDO"
     DB 00h
 
 START:
     ACALL lcd_init
+    MOV R7, #08h
     MOV A, #05h
     ACALL posicionaCursor
     MOV DPTR,#AOBA          
@@ -44,6 +45,12 @@ START:
     MOV TL1, #243 ;valor para a primeira contagem
     MOV IE,#90H ; Habilita interrupção serial
     SETB TR1 ;liga o contador/temporizador 1 
+    MOV A, #4Fh
+    ACALL posicionaCursor
+    MOV 70h, R7
+    MOV A , 70h
+    ADD A, #30h
+    ACALL sendCharacter
     MOV R5, #00h
     MOV R4, #40h
     JMP $    
@@ -71,7 +78,6 @@ loopComparacao:
     MOVC A, @A + DPTR ; carrega o caractere da palavra
     JZ  fimComparacao ; se for zero, chegamos ao fim da palavra
     CJNE A, 30h, verificaProximo ; compara o caractere com o valor em 30h
-
     ; se eles são iguais, a letra está na palavra
     ; exibe a letra na primeira linha do LCD
     MOV A, R1
@@ -79,6 +85,7 @@ loopComparacao:
     MOV A, 30h
     ACALL sendCharacter
     MOV R3, #0FFh
+
 verificaProximo:
     INC R1
     JMP loopComparacao
@@ -92,6 +99,18 @@ fimComparacao:
     MOV A, 30h
     ACALL sendCharacter
     INC R4 ; incrementa a posição na segunda linha
+    DEC R7
+    MOV A, #4Fh
+    ACALL posicionaCursor
+    MOV 70h, R7
+    MOV A , 70h
+    ADD A, #30h
+    ACALL sendCharacter
+    CJNE R7, #00h, continue
+    
+
+    continue:
+    RET
 
 fimDoFim:  
     RET
@@ -266,5 +285,3 @@ delay:
     MOV R0, #50
     DJNZ R0, $
     RET
-
-
