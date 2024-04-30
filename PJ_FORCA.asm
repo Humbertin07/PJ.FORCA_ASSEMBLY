@@ -27,17 +27,19 @@ AOBA:
     DB 00h
 
 PALAVRA:
-    DB "PARALELEPIPEDO"
+    DB "TESTE"
+    DB 00h
+
+FRACASSO:
+    DB "FRACASSO"
+    DB 00h
+
+VENCEDOR:
+    DB "YOU WIN!"
     DB 00h
 
 START:
     ACALL lcd_init
-    MOV R7, #08h
-    MOV A, #05h
-    ACALL posicionaCursor
-    MOV DPTR,#AOBA          
-    ACALL escreveStringROM
-    ACALL clearDisplay
     MOV SCON, #50H ;porta serial no modo 1 e habilita a recepção
     MOV PCON, #80h ;set o bit SMOD
     MOV TMOD, #20H ;CT1 no modo 2
@@ -45,13 +47,19 @@ START:
     MOV TL1, #243 ;valor para a primeira contagem
     MOV IE,#90H ; Habilita interrupção serial
     SETB TR1 ;liga o contador/temporizador 1 
+    MOV R5, #05h
+    MOV R7, #08h
+    MOV A, #05h
+    ACALL posicionaCursor
+    MOV DPTR,#AOBA          
+    ACALL escreveStringROM
+    ACALL clearDisplay
     MOV A, #4Fh
     ACALL posicionaCursor
     MOV 70h, R7
     MOV A , 70h
     ADD A, #30h
     ACALL sendCharacter
-    MOV R5, #00h
     MOV R4, #40h
     JMP $    
 
@@ -85,6 +93,17 @@ loopComparacao:
     MOV A, 30h
     ACALL sendCharacter
     MOV R3, #0FFh
+    DEC  R5; decrementa e reimprime a pontuação até chegar em 0
+    
+    CJNE R5, #00h, verificaProximo ;se a pontuação chegar em 0, é impresso a palavra FRACASSO e o jogo todo é reiniciado
+
+    ACALL clearDisplay
+    MOV A, #04h
+    ACALL posicionaCursor
+    MOV DPTR,#VENCEDOR        
+    ACALL escreveStringROM
+    ACALL clearDisplay
+    SJMP $
 
 verificaProximo:
     INC R1
@@ -99,18 +118,23 @@ fimComparacao:
     MOV A, 30h
     ACALL sendCharacter
     INC R4 ; incrementa a posição na segunda linha
-    DEC R7
+    DEC R7 ; decrementa e reimprime a pontuação até chegar em 0
     MOV A, #4Fh
     ACALL posicionaCursor
     MOV 70h, R7
     MOV A , 70h
     ADD A, #30h
     ACALL sendCharacter
-    CJNE R7, #00h, continue
-    
 
-    continue:
-    RET
+    CJNE R7, #00h, fimDoFim ;se a pontuação chegar em 0, é impresso a palavra FRACASSO e o jogo todo é reiniciado
+
+    ACALL clearDisplay
+    MOV A, #04h
+    ACALL posicionaCursor
+    MOV DPTR,#FRACASSO        
+    ACALL escreveStringROM
+    ACALL clearDisplay
+    SJMP $
 
 fimDoFim:  
     RET
