@@ -50,8 +50,8 @@ graph TD;
     Comparação_Letra --> Funções_Auxiliares
 
     subgraph Memórias
-        posInicio((ORG 0000h))
-        posPalavra((ORG 0040h))
+        posInicio{ORG 0000h}
+        posPalavra{ORG 0040h}
     end
 
     Início --> posInicio
