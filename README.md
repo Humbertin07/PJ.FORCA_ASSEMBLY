@@ -33,6 +33,7 @@ O jogador deverá adivinhar a palavra que está armazenada na memória sem perde
   <ul>
     <li>edSim 51</li>
     <li>Display LCD 16x2</li>
+    <li>8-bit UART</li>
   </ul>
 </div>
 
@@ -56,7 +57,6 @@ jmp[JMP $]
 loop{loopComparacao}
 verifica{verificaProximo}
 fimcomp{fimComparacao}
-fim[fimDoFim]
 r7[R7 = 8]
 r7f{R7 = 0}
 r5[R5 = tamanho da palavra]
@@ -75,7 +75,7 @@ cursor--->|imprime na segunda linha as letras não correspondentes|send
 fimcomp-->r3f--->|decrementa R5 até 0 a cada letra acertada|display-->cursor-->ROM--->|imprime no LCD|ganhar
 ganhar--->|limpa o LCD para finalizar o jogo|display-->sjmp
 cursor--->|imprime no LCD a pontuação|r7-->fimcomp
-r7-->r7f-->display-->cursor-->fraco-->ROM-->display--->|reinicia|start
+r7-->r7f-->display-->cursor-->fraco-->ROM-->display-->sjmp
 
 
 ```
