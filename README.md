@@ -142,7 +142,7 @@ START:
     MOV R5, #05h ; inicia R5 com o valor 05h
     MOV R7, #08h ; inicia R& com o valor 08h
     MOV A, #05h ; está mostrando aonde será o início da impressão da string no lcd para logo em seguida o cursor ser posicionado
-    ACALL posicionaCursor chama a sub-rotina posicionaCursor para que a impressão no lcd seja feita na posição correta
+    ACALL posicionaCursor ; chama a sub-rotina posicionaCursor para que a impressão no lcd seja feita na posição correta
     MOV DPTR,#AOBA ; está movendo a palavra armazenada em AOBA para DPTR         
     ACALL escreveStringROM ; chama a sub-rotina escreveStringROM para que haja a impressão da string armazenada e chamada anteriormente
     ACALL clearDisplay ; limpa o display 
