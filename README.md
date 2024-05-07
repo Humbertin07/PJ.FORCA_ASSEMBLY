@@ -5,6 +5,7 @@
   <a href="#-objetivo-">Objetivo</a> |
   <a href="#-itens-utilizados-">Itens Utilizados</a> |
   <a href="#%EF%B8%8F-código-do-projeto-%EF%B8%8F">Código do Projeto</a> |
+  <a href="#-vídeos-">Vídeos</a> |
   <a href="#-autores-do-projeto-">Autores</a>
 </p>
 
@@ -402,6 +403,10 @@ delay:
 ```
   
 </details>
+
+## 📸 Vídeos 📸
+
+
 
 ## 🧑🏻‍💻 Autores do Projeto 🧑🏻‍💻
 
