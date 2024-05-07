@@ -11,7 +11,7 @@
 Este projeto consiste em um jogo da forca implementado em assembly. O jogo desafia os jogadores a descobrir uma palavra oculta, tentando adivinhar as letras corretas antes de exceder o número limite de tentativas.
 
 ## 📈 Objetivo 📈
-O jogador deverá adivinhar a palavra que está armazenada na memória sem perder as vidas que ele tem. 
+O jogador deverá adivinhar a palavra que está armazenada na memória sem perder as 08 vidas que ele tem. 
 
 ## 🕹️ Passo a Passo do Jogo 🕹️
 
@@ -19,7 +19,8 @@ O jogador deverá adivinhar a palavra que está armazenada na memória sem perde
 - Caso tenha a letra na palavra, ela será inserida na primeira fileira.
 - Caso não tenha a letra na palavra, ela será mostrada na segunda fileira e uma vida será perdida.
 - O jogador deverá descobrir a palavra escondida sem perder todas as vidas.
-- Caso não consiga, o jogo será finalizado.
+- Caso não consiga, a palavra "FRACASSO" aparecerá no LCD e o jogo será finalizado.
+- Caso consiga, a palavra "YOU WIN!" aparecerá no LCD e o jogo será finalizado.
 
 ## 📚 Itens Utilizados 📚
 
@@ -84,7 +85,10 @@ r7-->r7f-->display-->cursor-->fraco-->ROM-->display-->sjmp
 
 O código também está disponível no repositório!
 
-```asm
+<details>
+  <summary>Código em Assembly</summary>
+
+  ```asm
 RS      EQU     P1.3
 EN      EQU     P1.2
 
@@ -286,7 +290,6 @@ lcd_init:
     CALL delay        
     RET
 
-
 sendCharacter:
     SETB RS          
     MOV C, ACC.7        
@@ -397,7 +400,8 @@ delay:
     DJNZ R0, $
     RET
 ```
-
+  
+</details>
 
 ## 🧑🏻‍💻 Autores do Projeto 🧑🏻‍💻
 
