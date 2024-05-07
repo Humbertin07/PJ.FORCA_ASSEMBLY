@@ -406,7 +406,11 @@ delay:
 
 ## 📸 Vídeos 📸
 
+Para apresentar o jogo, fizemos algumas gravações do jogo rodando. Caso queira ver como ficou, basta clicar no botão abaixo.
 
+<a href="">
+  <img src="https://img.shields.io/badge/YouTube-FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube">
+</a>
 
 ## 🧑🏻‍💻 Autores do Projeto 🧑🏻‍💻
 
