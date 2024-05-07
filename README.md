@@ -62,6 +62,7 @@ r7f{R7 = 0}
 r5[R5 = tamanho da palavra]
 fraco[FRACASSO]
 ganhar[YOU WIN!]
+sjmp[SJMP $]
 
 start-->LCD-->cursor--->|primeiro passo|aoba
 aoba-->ROM-->r1-->display-->jmp
@@ -71,7 +72,8 @@ verifica--->|letras corretas|cursor--->|imprime na primeira linha as letras corr
 send--->|espera uma nova letra no UART|jmp
 loop--->|acabou a palavra|fimcomp-->r3--->|letras erradas e decrementa 1 ponto|cursor
 cursor--->|imprime na segunda linha as letras não correspondentes|send
-fimcomp-->r3f--->|decrementa R5 até 0|fim--->|espera a próxima letra no UART|jmp
+fimcomp-->r3f--->|decrementa R5 até 0 a cada letra acertada|display-->cursor-->ROM--->|imprime no LCD|ganhar
+ganhar--->|limpa o LCD para finalizar o jogo|display-->sjmp
 cursor--->|imprime no LCD a pontuação|r7-->fimcomp
 r7-->r7f-->display-->cursor-->fraco-->ROM-->display--->|reinicia|start
 
