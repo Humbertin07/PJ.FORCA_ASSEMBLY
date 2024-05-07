@@ -411,7 +411,7 @@ delay:
 
 Para a apresentação, fizemos algumas gravações do jogo rodando. Caso queira ver como ficou, basta clicar no botão abaixo.
 
-<a href="">
+<a href="https://youtu.be/UQYzTkkz6So">
   <img src="https://img.shields.io/badge/YouTube-FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white" alt="YouTube">
 </a>
 
